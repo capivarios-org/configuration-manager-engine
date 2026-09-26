@@ -16,7 +16,9 @@ Projetado para ser **autossuficiente e ultraleve**, o Engine pode rodar isolado 
   - MySQL
   - MariaDB
   - Oracle Database
-- **Autossuficiente:** Não depende de painel administrativo (Control Plane) para operar.
+- **100% Autônomo e Standalone:** Opera com independência absoluta do painel administrativo ([Admin / Control Plane](https://github.com/capivarios-org/configuration-manager-admin)). Requer apenas o Core Schema mínimo e pode ser alimentado diretamente via SQL, scripts ou pipelines.
+
+> 📖 **Para a especificação completa de autonomia e Core Schema, consulte [SPECIFICATION.md](SPECIFICATION.md).**
 
 ---
 

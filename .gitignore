@@ -1,0 +1,12 @@
+# Binários
+bin/
+data-plane
+
+# Ambientes locais
+.env
+.env.local
+
+# IDEs
+.idea/
+.vscode/
+*.swp

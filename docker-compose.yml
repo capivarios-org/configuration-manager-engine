@@ -1,0 +1,93 @@
+services:
+  # ============================================================================
+  # PostgreSQL (Porta Padrão: 5432)
+  # ============================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: config_manager_postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-config_manager}
+      POSTGRES_USER: ${DB_USER:-root}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-root} -d ${DB_NAME:-config_manager}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # MySQL (Porta Padrão: 3306)
+  # ============================================================================
+  mysql:
+    image: mysql:8.4
+    container_name: config_manager_mysql
+    restart: unless-stopped
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-config_manager}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=${DB_PASSWORD:-secret_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # MariaDB (Porta Padrão: 3307)
+  # ============================================================================
+  mariadb:
+    image: mariadb:11.4
+    container_name: config_manager_mariadb
+    restart: unless-stopped
+    ports:
+      - "${MARIADB_PORT:-3307}:3306"
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-config_manager}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-secret_password}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "--password=${DB_PASSWORD:-secret_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================================
+  # Oracle Database Free (Porta Padrão: 1521)
+  # ============================================================================
+  oracle:
+    image: gvenzl/oracle-free:slim-faststart
+    container_name: config_manager_oracle
+    restart: unless-stopped
+    ports:
+      - "${ORACLE_PORT:-1521}:1521"
+    environment:
+      ORACLE_PASSWORD: ${DB_PASSWORD:-secret_password}
+      APP_USER: ${DB_USER:-root}
+      APP_PASSWORD: ${DB_PASSWORD:-secret_password}
+      DATABASE: ${DB_NAME:-config_manager}
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+    healthcheck:
+      test: ["CMD", "healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  mysql_data:
+    driver: local
+  mariadb_data:
+    driver: local
+  oracle_data:
+    driver: local
